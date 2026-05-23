@@ -1,0 +1,8 @@
+{
+  "name": "Le Petit Bougiote",
+  "description": "Site web officiel du restaurant Le Petit Bougiote à Béziers",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
