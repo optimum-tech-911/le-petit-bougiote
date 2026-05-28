@@ -1,6 +1,7 @@
 import logoImage from '../assets/logo.png';
 import beefBurgers from '../assets/menu/beef-burgers.webp';
 import brownies from '../assets/menu/brownies.webp';
+import boissonsFroides from '../assets/menu/boissons-froides.webp';
 import cappuccino from '../assets/menu/cappuccino.webp';
 import cesarSalad from '../assets/menu/cesar-salad.webp';
 import cheesecake from '../assets/menu/cheesecake.webp';
@@ -56,7 +57,7 @@ export const productImageMap: Record<string, ProductImageConfig> = {
   'prod-formule-pdj': realImage(cappuccino, 'Formule petit-déjeuner chez Le Petit Bougiote'),
   'prod-group-cafes-classiques': realImage(espresso, 'Cafés classiques servis chez Le Petit Bougiote'),
   'prod-group-boissons-gourmandes': realImage(gourmetHotDrink, 'Boissons gourmandes servies chez Le Petit Bougiote'),
-  'prod-group-smoothies': brandedDrinkPlaceholder('Smoothies servis chez Le Petit Bougiote'),
+  'prod-group-smoothies': realImage(boissonsFroides, 'Boissons froides servies chez Le Petit Bougiote'),
   'prod-formule-gourmande': realImage(gourmetHotDrink, 'Formule gourmande servie chez Le Petit Bougiote'),
   'prod-eau': brandedDrinkPlaceholder('Boisson froide Le Petit Bougiote'),
   'prod-eau-gazeuse': brandedDrinkPlaceholder('Boisson froide Le Petit Bougiote'),

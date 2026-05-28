@@ -41,7 +41,13 @@ type MenuSection = {
 };
 
 type MenuCard = {
-  key: 'burgers' | 'accompagnements' | 'boissons' | 'douceurs' | 'formules';
+  key:
+    | 'burgers'
+    | 'accompagnements'
+    | 'boissons-chaudes'
+    | 'boissons-froides'
+    | 'douceurs'
+    | 'formules';
   title: string;
   description: string;
   image?: string;
@@ -244,9 +250,11 @@ export default function MenuPage() {
   const cards = useMemo<MenuCard[]>(() => {
     const burgerSection = sectionByKey.get('burgers');
     const accompagnementsSection = sectionByKey.get('accompagnements');
-    const boissonsImageSource =
+    const boissonsChaudesImageSource =
       sectionByKey.get('cafes-classiques')?.product ??
-      sectionByKey.get('boissons-gourmandes')?.product ??
+      sectionByKey.get('boissons-gourmandes')?.product;
+    const boissonsFroidesImageSource =
+      sectionByKey.get('smoothies')?.product ??
       sectionByKey.get('boissons-froides')?.products?.[0];
     const dessertsImageSource =
       sectionByKey.get('desserts')?.product ?? sectionByKey.get('gourmandises')?.product;
@@ -273,13 +281,22 @@ export default function MenuPage() {
         hidden: !accompagnementsSection,
       },
       {
-        key: 'boissons',
-        title: 'Boissons',
-        description: serviceMode === 'delivery' ? 'Boissons fraîches et smoothies uniquement en livraison.' : 'Boissons chaudes classiques, gourmandes, smoothies et boissons froides.',
-        image: boissonsImageSource?.image,
-        imageAlt: boissonsImageSource?.imageAlt,
-        sectionKeys: ['cafes-classiques', 'boissons-gourmandes', 'smoothies', 'boissons-froides'],
-        hidden: !sectionByKey.get('boissons-froides') && !sectionByKey.get('cafes-classiques') && !sectionByKey.get('boissons-gourmandes') && !sectionByKey.get('smoothies'),
+        key: 'boissons-froides',
+        title: 'Boissons froides',
+        description: 'Smoothies et boissons fraîches réunis dans une seule fiche.',
+        image: boissonsFroidesImageSource?.image,
+        imageAlt: boissonsFroidesImageSource?.imageAlt,
+        sectionKeys: ['smoothies', 'boissons-froides'],
+        hidden: !sectionByKey.get('boissons-froides') && !sectionByKey.get('smoothies'),
+      },
+      {
+        key: 'boissons-chaudes',
+        title: 'Boissons chaudes',
+        description: 'Cafés classiques et boissons gourmandes regroupés dans une seule fiche.',
+        image: boissonsChaudesImageSource?.image,
+        imageAlt: boissonsChaudesImageSource?.imageAlt,
+        sectionKeys: ['cafes-classiques', 'boissons-gourmandes'],
+        hidden: !sectionByKey.get('cafes-classiques') && !sectionByKey.get('boissons-gourmandes'),
       },
       {
         key: 'douceurs',
