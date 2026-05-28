@@ -27,13 +27,13 @@ export function PublicNavbar() {
     user?.role === 'admin' || user?.role === 'super_admin'
       ? '/admin/dashboard'
       : user
-        ? '/compte/commandes'
+        ? '/compte'
         : '/connexion';
   const accountLabel =
     user?.role === 'admin' || user?.role === 'super_admin'
       ? 'Admin'
       : user
-        ? 'Mes commandes'
+        ? 'Compte'
         : 'Connexion';
 
   useEffect(() => {
@@ -95,10 +95,17 @@ export function PublicNavbar() {
           </a>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-1.5 lg:hidden">
+          <Link
+            to={accountTarget}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-slate-700 shadow-sm"
+            aria-label={accountLabel}
+          >
+            <User className="h-5 w-5" />
+          </Link>
           <Link
             to="/panier"
-            className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-border bg-white text-slate-700 shadow-sm"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-slate-700 shadow-sm"
             aria-label="Voir le panier"
           >
             <ShoppingBag className="h-5 w-5" />
@@ -108,7 +115,7 @@ export function PublicNavbar() {
               </span>
             ) : null}
           </Link>
-          <button type="button" className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-border bg-white text-slate-700 shadow-sm" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
+          <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-border bg-white text-slate-700 shadow-sm" onClick={() => setOpen((value) => !value)} aria-label="Ouvrir le menu">
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
