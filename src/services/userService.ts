@@ -1,10 +1,10 @@
 import type { User } from '@supabase/supabase-js';
-import { mockCustomers, currentUser } from '../data/mockUsers';
+import { mockCustomers } from '../data/mockUsers';
 import { simulateAsync } from '../lib/dataProvider';
 import { supabaseClient } from '../lib/supabaseClient';
 import type { CustomerSummary, UserProfile } from '../types';
 
-let profileStore = { ...currentUser };
+let profileStore: UserProfile | null = null;
 
 async function loadRole(userId: string): Promise<UserProfile['role'] | undefined> {
   if (!supabaseClient) {
@@ -31,14 +31,15 @@ async function loadRole(userId: string): Promise<UserProfile['role'] | undefined
 
 async function upsertProfileFromAuthUser(user: User): Promise<UserProfile> {
   if (!supabaseClient) {
-    return profileStore;
+    throw new Error('Authentification indisponible.');
   }
 
   const fullName =
     (user.user_metadata?.full_name as string | undefined) ??
     (user.user_metadata?.name as string | undefined) ??
-    profileStore.fullName;
-  const phone = (user.user_metadata?.phone as string | undefined) ?? profileStore.phone;
+    profileStore?.fullName ??
+    'Client';
+  const phone = (user.user_metadata?.phone as string | undefined) ?? profileStore?.phone ?? '';
 
   await supabaseClient.from('profiles').upsert({
     id: user.id,
@@ -69,6 +70,7 @@ export const userService = {
     if (supabaseClient) {
       const { data } = await supabaseClient.auth.getUser();
       if (!data.user) {
+        profileStore = null;
         return null;
       }
       const profile = await upsertProfileFromAuthUser(data.user);
@@ -114,7 +116,13 @@ export const userService = {
       }
     }
 
-    profileStore = { ...profileStore, ...updates };
+    profileStore = {
+      id: profileStore?.id ?? 'local-user',
+      fullName: updates.fullName ?? profileStore?.fullName ?? 'Client',
+      phone: updates.phone ?? profileStore?.phone ?? '',
+      email: updates.email ?? profileStore?.email ?? '',
+      role: updates.role ?? profileStore?.role,
+    };
     return simulateAsync(profileStore);
   },
 
@@ -152,7 +160,7 @@ export const userService = {
 
   async signIn(email: string, password: string): Promise<UserProfile> {
     if (!supabaseClient) {
-      return simulateAsync(profileStore);
+      throw new Error('Connexion indisponible pour le moment.');
     }
 
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
@@ -179,8 +187,7 @@ export const userService = {
     password: string;
   }): Promise<UserProfile | null> {
     if (!supabaseClient) {
-      profileStore = { ...profileStore, fullName, phone, email };
-      return simulateAsync(profileStore);
+      throw new Error('Inscription indisponible pour le moment.');
     }
 
     const { data, error } = await supabaseClient.auth.signUp({
@@ -211,7 +218,7 @@ export const userService = {
     if (supabaseClient) {
       await supabaseClient.auth.signOut();
     }
-    profileStore = { ...currentUser };
+    profileStore = null;
   },
 
   async signInWithGoogle(): Promise<void> {

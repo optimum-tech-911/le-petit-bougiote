@@ -1,6 +1,5 @@
 import { mockOrders } from '../data/mockOrders';
 import { products } from '../data/menu';
-import { currentUser } from '../data/mockUsers';
 import { simulateAsync } from '../lib/dataProvider';
 import { supabaseClient } from '../lib/supabaseClient';
 import type { CheckoutPayload, ConfirmationStatus, Order, OrderStatus, PaymentStatus } from '../types';
@@ -380,15 +379,11 @@ export const orderService = {
           return simulateAsync(remoteOrders, 120);
         }
       }
+
+      return simulateAsync([], 80);
     }
 
-    return simulateAsync(
-      orderStore.filter(
-        (order) =>
-          order.customerEmail === currentUser.email ||
-          order.customerPhone === currentUser.phone,
-      ),
-    );
+    return simulateAsync([]);
   },
 
   async getOrderById(orderId: string): Promise<Order | undefined> {
